@@ -1,10 +1,11 @@
 import parmFileParser as parser
 from sys import argv
 import subprocess
-
+import os 
+import s3Push
 
 class sourceFileProcessing:
-    def __init__(self, sourceFileName='', jobName='', parmFileName='', parmDetails=None, pSourceFilePath=''):
+    def __init__(self, sourceFileName='', jobName='', parmFileName='', parmDetails=None, pSourceFilePath='',bucketName=''):
         self.fileExtn = ''
         self.sourceFileName = sourceFileName 
         self.jobName = jobName
@@ -12,6 +13,8 @@ class sourceFileProcessing:
         self.parmDetails = None
         self.sourceFilePath = pSourceFilePath
         self.sourceQcFileName = ''
+        self.bucketName=bucketName
+        
 
     def getJobDetails(self):
         print("calling the parm file parser module")
@@ -20,6 +23,7 @@ class sourceFileProcessing:
         self.sourceFileName = self.parmDetails.get('psourcefilename')
         self.sourceFilePath = self.parmDetails.get('psourcefilepath')
         self.sourceQcFileName=self.sourceFileName+'.qc'
+        self.bucketName=self.parmDetails.get('ps3bucketname')
 
         if self.sourceFileName is None or self.fileExtn is None or self.sourceFilePath is None:
             print("parameters missing in the parm file exiting the script")
@@ -54,6 +58,10 @@ class sourceFileProcessing:
 
     def fileArchival():
         pass
+        
+    def pushFileDropzone():
+        ''' After checking the qc validation pushing the file to dropzone for further processing and converting the file to parquet '''
+        
 
 print("command line arguments ", argv)
 
@@ -65,3 +73,7 @@ print(jobName, parmFileName)
 fp = sourceFileProcessing(jobName=jobName, parmFileName=parmFileName)
 fp.getJobDetails()
 fp.qcValidation()
+
+print("calling class awsfilePush")
+s3push=s3Push.awsfilePush(bucketName=fp.bucketName,bucketKey='/'+fp.sourceFileName,filePath=fp.sourceFilePath+'/'+fp.sourceFileName+fp.fileExtn)
+s3push.singlePartUpload()
