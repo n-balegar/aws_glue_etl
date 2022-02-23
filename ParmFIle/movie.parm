@@ -1,0 +1,16 @@
+[global]
+pS3BucketName=movie-demo-murthy
+pSourceFilePath=/mnt/e/opt/isproj/Bank/movie/Input
+
+
+[jb1bk_movie]
+pSourceFileName=movie
+pExtn=.csv
+
+
+[jb1bk_rating]
+pSourceFileName=rating
+pExtn=.csv
+
+
+
