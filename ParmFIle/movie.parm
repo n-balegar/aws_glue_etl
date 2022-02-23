@@ -1,5 +1,5 @@
 [global]
-pS3BucketName=movie-demo-murthy
+pS3BucketName=moviedatamurthy
 pSourceFilePath=/mnt/e/opt/isproj/Bank/movie/Input
 
 
